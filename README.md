@@ -1,6 +1,8 @@
-# CNC Facing Operation Macro
+# Milo Facing Operation Macro
 
-A comprehensive facing operation macro for RepRap-based CNC machines with an optional DuetWebControl plugin interface.
+
+
+A comprehensive facing operation macro for RepRap-based Milo machines with an optional DuetWebControl plugin interface.
 
 ## Features
 
