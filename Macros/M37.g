@@ -74,7 +74,9 @@ var aP = 0
 
 if exists(global.mosCAID)                 ; Check if air control pin is defined
     M42 P{global.mosCAID} S1               ; Turn on air using defined pin
-    G4 S1   
+    G4 S5
+    M42 P{global.mosCAID} S0               ; Turn off air using defined pin
+
 ; If radius of tool is greater than radius of the toolsetter, then we use a
 ; modified probing mechanism to identify the longest (lowest) point of the tool
 if { global.mosTT[state.currentTool][0] > global.mosTSR }
