@@ -1,0 +1,12 @@
+{
+    "id": "facing_macro",
+    "name": "Facing Macro",
+    "author": "Kadders",
+    "version": "1.0.0",
+    "license": "GPL-3.0-or-later",
+    "homepage": "https://github.com/kadders/Milo-Code",
+    "dwcVersion": "3.5.3",
+    "dependencies": {},
+    "dwcWebpackChunk": "facing_macro",
+    "dwcPluginType": "navigation"
+} 

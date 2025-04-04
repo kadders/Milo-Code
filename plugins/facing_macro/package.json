@@ -1,0 +1,24 @@
+{
+  "name": "facing-macro-plugin",
+  "version": "1.0.0",
+  "description": "Facing Macro Plugin for DuetWebControl",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "clean": "rm -rf dist"
+  },
+  "author": "Kadders",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "@babel/core": "^7.12.0",
+    "@babel/preset-env": "^7.12.0",
+    "babel-loader": "^8.2.0",
+    "css-loader": "^5.0.0",
+    "vue": "^2.6.14",
+    "vue-loader": "^15.9.0",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.6.14",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^4.0.0"
+  }
+} 
