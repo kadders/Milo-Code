@@ -34,6 +34,16 @@
                 :rules="[v => v > 0 || 'Number of passes must be greater than 0']"
               ></v-text-field>
             </v-col>
+
+            <v-col cols="12" md="4">
+              <v-text-field
+                v-model="formData.toolDiameter"
+                label="Tool Diameter (mm)"
+                type="number"
+                required
+                :rules="[v => v > 0 || 'Tool diameter must be greater than 0']"
+              ></v-text-field>
+            </v-col>
           </v-row>
         </v-card-text>
       </v-card>
@@ -247,6 +257,7 @@ export default {
         width: '',
         depth: '',
         numPasses: '',
+        toolDiameter: '',
         cutDepth: '0.2',
         feedRate: '1500',
         spindleSpeed: '15000',
@@ -272,6 +283,7 @@ export default {
       return this.formData.width > 0 && 
              this.formData.depth > 0 && 
              this.formData.numPasses > 0 &&
+             this.formData.toolDiameter > 0 &&
              (this.formData.zReference === 'probe' || (this.formData.zReference === 'manual' && this.formData.zHeight !== ''));
     }
   },
@@ -281,23 +293,47 @@ export default {
       this.success = false;
       
       try {
-        let command = 'M98 P"0:/macros/Facing/facing_macro.gcode"'
-        command += ` W${this.formData.width} D${this.formData.depth} N${this.formData.numPasses} Z${this.formData.startFromCenter ? '1' : '0'}`
+        // Format parameters to ensure proper decimal values
+        const width = parseFloat(this.formData.width).toFixed(2);
+        const depth = parseFloat(this.formData.depth).toFixed(2);
+        const numPasses = parseInt(this.formData.numPasses);
+        const toolDiameter = parseFloat(this.formData.toolDiameter).toFixed(2);
+        const zParam = this.formData.startFromCenter ? '1' : '0';
+        
+        let command = 'M98 P"0:/macros/Facing/facing_macro.gcode"';
+        command += ` W${width} D${depth} N${numPasses} E${toolDiameter} Z${zParam}`;
         
         // Add optional parameters if they differ from defaults
-        if (this.formData.cutDepth !== '0.2') command += ` H${this.formData.cutDepth}`;
-        if (this.formData.feedRate !== '1500') command += ` F${this.formData.feedRate}`;
-        if (this.formData.spindleSpeed !== '15000') command += ` S${this.formData.spindleSpeed}`;
-        if (this.formData.stockOffset !== '2') command += ` O${this.formData.stockOffset}`;
-        if (this.formData.useCoolant) command += ' C1';
-        if (this.formData.stepOver !== '1') command += ` T${this.formData.stepOver}`;
+        if (this.formData.cutDepth !== '0.2') {
+          command += ` H${parseFloat(this.formData.cutDepth).toFixed(2)}`;
+        }
+        
+        if (this.formData.feedRate !== '1500') {
+          command += ` F${parseInt(this.formData.feedRate)}`;
+        }
+        
+        if (this.formData.spindleSpeed !== '15000') {
+          command += ` S${parseInt(this.formData.spindleSpeed)}`;
+        }
+        
+        if (this.formData.stockOffset !== '2') {
+          command += ` O${parseInt(this.formData.stockOffset)}`;
+        }
+        
+        if (this.formData.useCoolant) {
+          command += ' C1';
+        }
+        
+        if (this.formData.stepOver !== '1') {
+          command += ` T${parseInt(this.formData.stepOver)}`;
+        }
         
         // Add finishing parameters if enabled
         if (this.formData.doFinishing) {
-          if (this.formData.finishDoc !== '0.1') command += ` HF${this.formData.finishDoc}`;
-          if (this.formData.finishFeed !== '1000') command += ` FF${this.formData.finishFeed}`;
-          if (this.formData.finishSpeed !== '15000') command += ` SF${this.formData.finishSpeed}`;
-          if (this.formData.finishStep) command += ` TF${this.formData.finishStep}`;
+          if (this.formData.finishDoc !== '0.1') command += ` I${parseFloat(this.formData.finishDoc).toFixed(2)}`;
+          if (this.formData.finishFeed !== '1000') command += ` J${parseInt(this.formData.finishFeed)}`;
+          if (this.formData.finishSpeed !== '15000') command += ` K${parseInt(this.formData.finishSpeed)}`;
+          if (this.formData.finishStep) command += ` L${parseFloat(this.formData.finishStep).toFixed(2)}`;
         }
 
         // Add Z reference parameter
